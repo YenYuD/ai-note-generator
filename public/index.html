@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini 逐字稿筆記生成器</title>
+    <title>Gemini Transcript Note Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --bg: #0f172a;
+            --primary: #578997;
+            --primary-hover: #57988774;
+            --bg: #23323b;
             --card-bg: #1e293b;
             --input-bg: #334155;
             --text: #f1f5f9;
@@ -52,8 +52,9 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #a78bfa 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, #6ea48d 0%, #c7dcc1 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -80,6 +81,12 @@
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text);
+        }
+        
+        .helper-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
 
         input, textarea {
@@ -120,7 +127,6 @@
 
         button:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-1px);
         }
 
         button:active {
@@ -163,10 +169,9 @@
             color: var(--text-muted);
             font-size: 1rem;
             overflow-x: auto;
-            white-space: pre-wrap; /* Fallback */
+            white-space: pre-wrap;
         }
         
-        /* Simulating markdown rendering styles */
         .markdown-body h1, .markdown-body h2, .markdown-body h3 {
             color: var(--text);
             margin-top: 1.5rem;
@@ -249,31 +254,39 @@
 <body>
     <div class="container">
         <header>
-            <h1>Gemini 筆記生成器</h1>
-            <p class="subtitle">將您的逐字稿轉換為結構精美的 Markdown 筆記</p>
+            <h1>Gemini Transcript Note Generator</h1>
+            <p class="subtitle">Convert your transcripts into structured Markdown notes using AI</p>
         </header>
 
         <main>
             <section class="card">
                 <div class="form-group">
-                    <label for="title">筆記標題 (Title)</label>
-                    <input type="text" id="title" placeholder="例如：SQL 基礎教學 Part 1">
+                    <label for="title">Note Title</label>
+                    <input type="text" id="title" placeholder="e.g., SQL Basics Part 1">
                 </div>
+                
                 <div class="form-group">
-                    <label for="transcript">逐字稿內容 (Transcript)</label>
-                    <textarea id="transcript" placeholder="請在此貼上您的課程或會議逐字稿..."></textarea>
+                    <label for="language">Target Language</label>
+                    <input type="text" id="language" placeholder="e.g., Traditional Chinese, English, Spanish" value="English">
+                    <p class="helper-text">Specify the language you want the notes to be generated in.</p>
                 </div>
+
+                <div class="form-group">
+                    <label for="transcript">Transcript Content</label>
+                    <textarea id="transcript" placeholder="Paste your transcript here..."></textarea>
+                </div>
+                
                 <button type="button" id="generateBtn" onclick="submitData()">
-                    <span id="btnText">開始生成筆記</span>
+                    <span id="btnText">Generate Notes</span>
                 </button>
                 <div id="status" class="status-message"></div>
             </section>
 
             <section id="result-area" class="card">
                 <div class="result-header">
-                    <h2>生成結果</h2>
+                    <h2>Generated Result</h2>
                     <button class="btn-secondary" onclick="downloadMarkdown()">
-                        ⬇ 下載 .md 檔案
+                        ⬇ Download .md
                     </button>
                 </div>
                 <div id="markdown-output" class="markdown-body"></div>
@@ -288,6 +301,7 @@
         async function submitData() {
             const titleInput = document.getElementById('title');
             const transcriptInput = document.getElementById('transcript');
+            const languageInput = document.getElementById('language');
             const btn = document.getElementById('generateBtn');
             const btnText = document.getElementById('btnText');
             const statusDiv = document.getElementById('status');
@@ -296,25 +310,26 @@
 
             const title = titleInput.value.trim();
             const transcript = transcriptInput.value.trim();
+            const language = languageInput.value.trim();
             
             // Reset UI
             statusDiv.style.display = 'none';
             resultArea.style.display = 'none';
             
             if (!title || !transcript) {
-                showStatus('請務必填寫標題與逐字稿內容', 'error');
+                showStatus('Please provide both a title and transcript content.', 'error');
                 return;
             }
 
             // Loading state
             btn.disabled = true;
-            btnText.innerHTML = '<span class="loader"></span> 正在分析與撰寫筆記...';
+            btnText.innerHTML = '<span class="loader"></span> Generating notes...';
             
             try {
                 const response = await fetch('/generate-notes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, transcript })
+                    body: JSON.stringify({ title, transcript, language })
                 });
                 
                 const data = await response.json();
@@ -328,18 +343,18 @@
                     
                     // Show result
                     resultArea.style.display = 'block';
-                    showStatus('筆記生成成功！', 'success');
+                    showStatus('Notes generated successfully!', 'success');
                     
                     // Scroll to result
                     resultArea.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    showStatus('錯誤: ' + data.message, 'error');
+                    showStatus('Error: ' + data.message, 'error');
                 }
             } catch (error) {
-                showStatus('連線失敗: ' + error.message, 'error');
+                showStatus('Connection failed: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
-                btnText.textContent = '開始生成筆記';
+                btnText.textContent = 'Generate Notes';
             }
         }
 

@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const { GoogleGenAI } = require("@google/genai");
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -14,11 +13,21 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_API_KEY,
 });
 
-async function callGemini(title, transcript) {
+const MODEL = "gemini-2.5-flash-lite"
+
+async function callGemini(title, transcript, targetLanguage) {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
-      contents: `你是一個 SQL 專家。請根據這段 Udemy 逐字稿生成結構化的筆記。要求：使用 Markdown 格式、SQL 語法要用代碼塊、加入重點摘要。內容：${transcript}`
+      model: MODEL,
+      contents: `You are a SQL expert. Please generate structured notes based on the following transcript. 
+      Requirements: 
+      1. Use Markdown format.
+      2. Use code blocks for SQL syntax.
+      3. Include a summary of key points.
+      4. The output language must be: ${targetLanguage}.
+      5. The title of the note is: ${title}.
+      
+      Transcript content: ${transcript}`
     });
 
     const result = response.candidates[0].content.parts[0].text;
@@ -32,13 +41,15 @@ async function callGemini(title, transcript) {
 }
 
 app.post('/generate-notes', async (req, res) => {
-  const { title, transcript } = req.body;
+  const { title, transcript, language } = req.body;
+  const targetLanguage = language || "English"; // Default to English if not provided
+
   if (!title || !transcript) {
     return res.status(400).send({ status: 'error', message: 'Title and transcript are required' });
   }
 
   try {
-    const { markdown, filename } = await callGemini(title, transcript);
+    const { markdown, filename } = await callGemini(title, transcript, targetLanguage);
     res.send({ status: 'success', markdown, filename });
   } catch (error) {
     res.status(500).send({ status: 'error', message: error.message });
