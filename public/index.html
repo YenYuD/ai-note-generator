@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini 筆記生成器</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input, textarea { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+        textarea { height: 300px; }
+        button { padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #status { margin-top: 1rem; padding: 1rem; border-radius: 4px; display: none; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Gemini 筆記生成器</h1>
+    <div class="form-group">
+        <label for="title">標題 (Title)</label>
+        <input type="text" id="title" placeholder="輸入筆記標題">
+    </div>
+    <div class="form-group">
+        <label for="transcript">逐字稿內容 (Transcript)</label>
+        <textarea id="transcript" placeholder="在此貼上逐字稿..."></textarea>
+    </div>
+    <button onclick="submitData()">生成筆記</button>
+    <div id="status"></div>
+
+    <script>
+        async function submitData() {
+            const title = document.getElementById('title').value;
+            const transcript = document.getElementById('transcript').value;
+            const statusDiv = document.getElementById('status');
+            
+            if (!title || !transcript) {
+                showStatus('請填寫完整資訊', 'error');
+                return;
+            }
+
+            showStatus('處理中...', 'success');
+            
+            try {
+                const response = await fetch('/generate-notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, transcript })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(data.message, 'success');
+                } else {
+                    showStatus('錯誤: ' + data.message, 'error');
+                }
+            } catch (error) {
+                showStatus('請求失敗: ' + error.message, 'error');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+            statusDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
