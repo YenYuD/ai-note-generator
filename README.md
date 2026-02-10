@@ -1,76 +1,86 @@
-# Gemini Transcript Note Generator 📝
+# Gemini Transcript Note Generator
 
-This is a simple yet powerful tool that uses the Google Gemini API to convert lengthy transcripts into clear, structured Markdown notes. It features a modern React frontend with syntax highlighting and a robust Node.js backend.
+This project is a web application that uses Google's Gemini AI to generate structured Markdown notes from video transcripts. It features a React frontend and an Express backend.
 
-## ✨ Features
+## Project Structure
 
-- **AI-Powered Summarization**: Uses the Google Gemini model to deeply analyze text and extract key information.
-- **Rich Markdown Rendering**: React-based frontend with `react-markdown` and `syntax-highlighter` for beautiful code blocks.
-- **Structured Output**: Automatically generates Markdown suitable for notes, including key points and code blocks (e.g., SQL).
-- **Customizable Language**: You can specify the output language (e.g., English, Traditional Chinese, Spanish).
-- **Live Preview**: Renders the generated Markdown directly in the browser for immediate review.
-- **One-Click Download**: Supports exporting the result as a `.md` file.
-- **Modern UI**: Dark mode design with responsive layout and smooth animations.
+*   **`client/`**: React frontend application (Vite).
+*   **`server/`**: Express backend application (Node.js).
 
-## 🚀 Quick Start
+## Prerequisites
 
-### 1. Get Google API Key
-Please visit [Google AI Studio](https://aistudio.google.com/) to get a free API Key.
+*   Node.js (v18 or higher recommended)
+*   Google Gemini API Key
 
-### 2. Environment Setup
-Ensure Node.js is installed on your computer.
+## Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd gemini-transcript
-   ```
+### 1. Backend Setup (Server)
 
-2. **Install dependencies**
-   ```bash
-   # Install backend deps
-   npm install
-   
-   # Install frontend deps & build
-   npm run build
-   ```
+1.  Navigate to the `server` directory:
+    ```bash
+    cd server
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Create a `.env` file in the `server` directory and add your Google Gemini API key:
+    ```env
+    GOOGLE_API_KEY=your_api_key_here
+    PORT=3000
+    ```
+4.  Start the backend server:
+    ```bash
+    npm run dev  # For development (uses nodemon)
+    # or
+    npm start    # For production
+    ```
+    The server will run on `http://localhost:3000`.
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory:
-   ```env
-   GOOGLE_API_KEY=your_api_key_here
-   # PORT=3000 (Optional)
-   ```
+### 2. Frontend Setup (Client)
 
-4. **Start the server**
-   ```bash
-   npm start
-   ```
-   Open `http://localhost:3000` in your browser.
+1.  Open a new terminal and navigate to the `client` directory:
+    ```bash
+    cd client
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Create a `.env` file in the `client` directory (optional, for development proxy):
+    ```env
+    VITE_API_BASE_URL=http://localhost:3000
+    ```
+4.  Start the frontend development server:
+    ```bash
+    npm run dev
+    ```
+    The frontend will run on `http://localhost:5173` (or similar).
 
-### 🐞 Development Mode
+## Production Build
 
-To run the backend and frontend separately for development:
+To build the frontend for production and serve it through the backend:
 
-1. **Backend**: `npm run dev` (Runs on port 3000)
-2. **Frontend**: `cd client && npm run dev` (Runs on port 5173, proxies to 3000)
+1.  Build the React app:
+    ```bash
+    cd client
+    npm run build
+    ```
+2.  Start the backend server:
+    ```bash
+    cd ../server
+    npm start
+    ```
+    The application will be available at `http://localhost:3000`.
 
-## ☁️ Deploy to Cloud
+## Features
 
-This project is optimized for deployment on platforms like Render or Heroku.
+*   **Transcript to Notes**: Converts raw transcript text into structured Markdown notes.
+*   **Syntax Highlighting**: Automatically formats SQL code blocks.
+*   **Language Selection**: Supports generating notes in multiple languages (English, Traditional Chinese, etc.).
+*   **Download**: Export generated notes as `.md` files.
 
-### Deployment Steps (e.g., Render):
-1. Push to GitHub.
-2. Create a new "Web Service".
-3. **Build Command**: `npm run build`
-4. **Start Command**: `npm start`
-5. **Environment Variables**: Add `GOOGLE_API_KEY`.
-6. Deploy!
+## Technologies
 
-## 🛠️ Tech Stack
-- **Frontend**: React, Vite, TypeScript, React Markdown, Lucide React
-- **Backend**: Node.js, Express
-- **AI**: Google Gemini API (`@google/genai`)
-
-## 📝 License
-MIT License
+*   **Frontend**: React, TypeScript, Vite, React Hook Form, React Markdown, Lucide React.
+*   **Backend**: Node.js, Express, TypeScript, Google GenAI SDK.
