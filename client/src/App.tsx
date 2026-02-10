@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
-import { Loader2, Download, FileText, Globe } from 'lucide-react';
+import { Loader2, Download, FileText, Globe, Copy, Check } from 'lucide-react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import './App.css';
 
@@ -40,6 +40,7 @@ function App() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [isPdfGenerating, setIsPdfGenerating] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -117,6 +118,17 @@ function App() {
     }
   };
 
+  const handleCopy = async () => {
+    if (!markdown) return;
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   return (
     <div className="container">
       <header>
@@ -191,6 +203,10 @@ function App() {
                 <button className="btn-secondary" onClick={handleDownloadPdf} disabled={isPdfGenerating}>
                   {isPdfGenerating ? <Loader2 className="spin" size={16} /> : <FileText size={16} />}
                   {isPdfGenerating ? 'Generating PDF...' : 'Download .pdf'}
+                </button>
+                <button className="btn-secondary" onClick={handleCopy} disabled={!markdown}>
+                  {isCopied ? <Check size={16} /> : <Copy size={16} />}
+                  {isCopied ? 'Copied!' : ''}
                 </button>
               </div>
             </div>

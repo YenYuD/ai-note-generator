@@ -1,6 +1,27 @@
-# Gemini Transcript Note Generator
+# AI Transcript Note Generator
+
+
+![alt text](./client/assets/display1.png)
 
 This project is a web application that uses Google's Gemini AI to generate structured Markdown notes from video transcripts. It features a React frontend and an Express backend.
+
+## ✨ Features
+
+- **AI-Powered Note Generation**: Utilizes Google's **Gemini AI** to intelligently summarize and structure raw video transcripts into clean, readable notes.
+- **Markdown Support**:
+  - **Structured Output**: Generates headers, lists, and tables automatically.
+  - **Syntax Highlighting**: Beautifully renders code blocks (SQL, Python, JavaScript, etc.) with syntax highlighting.
+  - **GitHub Flavored Markdown**: Fully supports GFM features like tables and task lists.
+- **Customizable Options**:
+  - **Target Language**: Specify any language for the output (e.g., Traditional Chinese, English, Spanish).
+  - **Custom Titles**: Name your notes for easy organization.
+- **Export & Sharing**:
+  - **Download as Markdown**: Save the raw `.md` file for your personal knowledge base (Obsidian, Notion, etc.).
+  - **Download as PDF**: Instantly convert and download the formatted notes as a PDF document.
+  - **One-Click Copy**: Quickly copy the generated markdown content to your clipboard.
+
+![alt text](./client/assets/display2.png)
+
 
 ## Project Structure
 
