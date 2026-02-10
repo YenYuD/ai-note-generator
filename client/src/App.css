@@ -173,23 +173,26 @@ textarea {
 }
 
 .status-message {
+  max-width: 80%;
   margin-top: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0.75rem;
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
   text-align: center;
   font-weight: 500;
 }
 
 .status-message.success {
-  background-color: rgba(16, 185, 129, 0.2);
+  /* background-color: rgba(16, 185, 129, 0.2); */
   color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  /* border: 1px solid rgba(16, 185, 129, 0.3); */
 }
 
 .status-message.error {
-  background-color: rgba(239, 68, 68, 0.2);
+  /* background-color: rgba(239, 68, 68, 0.2); */
   color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  /* border: 1px solid rgba(239, 68, 68, 0.3); */
 }
 
 /* Markdown Styles */
@@ -242,3 +245,100 @@ textarea {
   h1 { font-size: 2rem; }
   .card { padding: 1.5rem; }
 }
+
+/* PDF Generation Styles */
+.markdown-body {
+    /* Ensure markdown body container handles page breaks gracefully */
+    page-break-inside: auto;
+}
+
+.markdown-body h1, 
+.markdown-body h2, 
+.markdown-body h3 {
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+.markdown-body p, 
+.markdown-body pre, 
+.markdown-body ul, 
+.markdown-body ol,
+.markdown-body li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* PDF Generation Overrides */
+.pdf-content {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-family: 'Times New Roman', Times, serif;
+  padding: 20px !important;
+}
+
+.pdf-content * {
+  color: #000000 !important; /* Force all text to black */
+  background-color: transparent !important; /* Ensure no dark backgrounds */
+  text-shadow: none !important;
+}
+
+.pdf-content h1,
+.pdf-content h2,
+.pdf-content h3,
+.pdf-content h4,
+.pdf-content h5,
+.pdf-content h6 {
+  color: #000000 !important;
+  border-bottom: 1px solid #cccccc !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.pdf-content p, 
+.pdf-content li {
+  color: #000000 !important;
+  line-height: 1.6 !important;
+}
+
+.pdf-content code {
+  color: #d63384 !important; /* Keep inline code distinct but readable */
+  background-color: #f5f5f5 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.pdf-content pre {
+  background-color: #f8f9fa !important;
+  border: 1px solid #ddd !important;
+  padding: 10px !important;
+  margin: 1em 0 !important;
+  border-radius: 4px !important;
+  overflow-x: hidden !important; /* Prevent scrollbars in PDF */
+  white-space: pre-wrap !important; /* Wrap long lines */
+}
+
+.pdf-content pre > div {
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+.pdf-content pre code {
+  color: #24292e !important; /* Dark text specifically for code blocks */
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.pdf-content a {
+  color: #000000 !important;
+  text-decoration: underline !important;
+}
+
+/* Force links to show URL if needed, but maybe not here */

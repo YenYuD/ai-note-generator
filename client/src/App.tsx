@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -38,6 +39,8 @@ function App() {
   const [filename, setFilename] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
@@ -87,6 +90,31 @@ function App() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!contentRef.current) return;
+    setIsPdfGenerating(true);
+
+    const element = contentRef.current;
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone.className = 'markdown-body pdf-content';
+
+    const opt = {
+      margin: [10, 10, 10, 10] as [number, number, number, number],
+      filename: filename.replace('.md', '.pdf') || 'notes.pdf',
+      image: { type: 'jpeg' as const, quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+    };
+
+    try {
+      await html2pdf().set(opt).from(clone).save();
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+    } finally {
+      setIsPdfGenerating(false);
+    }
   };
 
   return (
@@ -156,11 +184,17 @@ function App() {
           <section className="card result-section">
             <div className="result-header">
               <h2>Generated Result</h2>
-              <button className="btn-secondary" onClick={handleDownload}>
-                <Download size={16} /> Download .md
-              </button>
+              <div className="action-buttons">
+                <button className="btn-secondary" onClick={handleDownload} disabled={isPdfGenerating}>
+                  <Download size={16} /> Download .md
+                </button>
+                <button className="btn-secondary" onClick={handleDownloadPdf} disabled={isPdfGenerating}>
+                  {isPdfGenerating ? <Loader2 className="spin" size={16} /> : <FileText size={16} />}
+                  {isPdfGenerating ? 'Generating PDF...' : 'Download .pdf'}
+                </button>
+              </div>
             </div>
-            <div className="markdown-body">
+            <div className="markdown-body" ref={contentRef}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
