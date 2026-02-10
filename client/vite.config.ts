@@ -7,9 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/generate-notes': {
-        target: 'http://localhost:3000',
+        target: process.env.VITE_API_TARGET || 'http://localhost:3000',
         changeOrigin: true,
       }
+    },
+    host: true, // needed for Docker
+    watch: {
+       usePolling: true,
     }
   }
 })

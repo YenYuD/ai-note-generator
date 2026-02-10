@@ -46,7 +46,10 @@ function App() {
     setMarkdown('');
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      let baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      if (baseUrl && !baseUrl.startsWith('http')) {
+        baseUrl = `https://${baseUrl}`;
+      }
       const response = await fetch(`${baseUrl}/generate-notes`, {
         method: 'POST',
         headers: {
@@ -89,7 +92,7 @@ function App() {
   return (
     <div className="container">
       <header>
-        <h1>Gemini Transcript Note Generator</h1>
+        <h1>AI Transcript Note Generator</h1>
         <p className="subtitle">Convert your transcripts into structured Markdown notes using AI</p>
       </header>
 
@@ -163,12 +166,15 @@ function App() {
                 components={{
                   code({ className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '');
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { ref, ...rest } = props;
                     return match ? (
                       <SyntaxHighlighter
-                        style={vscDarkPlus}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        style={vscDarkPlus as any}
                         language={match[1]}
                         PreTag="div"
-                        {...props}
+                        {...rest}
                       >
                         {String(children).replace(/\n$/, '')}
                       </SyntaxHighlighter>
@@ -186,7 +192,7 @@ function App() {
           </section>
         )}
       </main>
-    </div>
+    </div >
   );
 }
 
