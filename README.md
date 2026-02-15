@@ -1,7 +1,7 @@
 # AI Transcript Note Generator
 
 
-![alt text](./client/assets/display1.png)
+![alt text](./assets/display1.png)
 
 This project is a web application that uses Google's Gemini AI to generate structured Markdown notes from video transcripts. It features a React frontend and an Express backend.
 
@@ -20,7 +20,7 @@ This project is a web application that uses Google's Gemini AI to generate struc
   - **Download as PDF**: Instantly convert and download the formatted notes as a PDF document.
   - **One-Click Copy**: Quickly copy the generated markdown content to your clipboard.
 
-![alt text](./client/assets/display2.png)
+![alt text](./assets/display2.png)
 
 
 ## Project Structure
@@ -45,10 +45,17 @@ This project is a web application that uses Google's Gemini AI to generate struc
     ```bash
     npm install
     ```
-3.  Create a `.env` file in the `server` directory and add your Google Gemini API key:
+3.  **Environment Variables**: Create a `.env` file in the `server` directory:
     ```env
-    GOOGLE_API_KEY=your_api_key_here
     PORT=3000
+    GOOGLE_API_KEY=your_gemini_api_key_here
+    
+    # CORS Configuration (Important for security)
+    FRONTEND_URL=http://localhost:5173        # Your frontend URL (Local dev)
+    FRONTEND_PREVIEW_URL=http://localhost:4173 # Your frontend preview URL
+    
+    # Optional
+    MODEL=gemini-2.5-flash-lite             # Specific Gemini model version
     ```
 4.  Start the backend server:
     ```bash
@@ -68,15 +75,19 @@ This project is a web application that uses Google's Gemini AI to generate struc
     ```bash
     npm install
     ```
-3.  Create a `.env` file in the `client` directory (optional, for development proxy):
+3.  **Environment Variables**: Create a `.env` file in the `client` directory:
     ```env
-    VITE_API_BASE_URL=http://localhost:3000
+    # Points to your backend API
+    VITE_API_BASE_URL=http://localhost:3000 
+    
+    # Check vite.config.ts for Proxy settings causing VITE_API_TARGET usage
+    VITE_API_TARGET=http://localhost:3000
     ```
 4.  Start the frontend development server:
     ```bash
     npm run dev
     ```
-    The frontend will run on `http://localhost:5173` (or similar).
+    The frontend will run on `http://localhost:5173`.
 
 ## Production Build
 
