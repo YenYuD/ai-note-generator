@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background: None (Transparent) or White/Black depending on context if needed, but standard favicons are transparent -->
+  
+  <!-- Document Outline -->
+  <path d="M320 32H112C85.5 32 64 53.5 64 80v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V160L320 32z" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" class="icon-path"/>
+  <path d="M320 32v128h128" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" class="icon-path"/>
+  
+  <!-- AI Sparkle / Star in the center -->
+  <path d="M256 192l22.6 67.9L346.5 282.5 278.6 305.1 256 373l-22.6-67.9L165.5 282.5 233.4 260z" fill="currentColor" class="icon-fill"/>
+  
+  <!-- Style for dark/light mode compatibility (using current color) -->
+  <style>
+    .icon-path { stroke: #1c212bff; } /* Default blue-600 */
+    .icon-fill { fill: #1c212bff; }
+    @media (prefers-color-scheme: dark) {
+      .icon-path { stroke: #141f2cff; } /* Lighter blue for dark mode */
+      .icon-fill { fill: #141f2cff; }
+    }
+  </style>
+</svg>
