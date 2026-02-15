@@ -15,5 +15,15 @@ export default defineConfig({
     watch: {
        usePolling: true,
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-syntax-highlighter': ['react-syntax-highlighter'],
+          'vendor': ['react', 'react-dom']
+        }
+      }
+    }
   }
 })

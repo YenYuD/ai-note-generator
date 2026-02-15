@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import html2pdf from 'html2pdf.js';
+
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -110,6 +110,7 @@ function App() {
     };
 
     try {
+      const html2pdf = (await import('html2pdf.js')).default;
       await html2pdf().set(opt).from(clone).save();
     } catch (err) {
       console.error('PDF generation failed:', err);
